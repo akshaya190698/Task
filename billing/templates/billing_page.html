@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/billing_page.css' %}">
+    <script>
+        function addProductField() {
+            const container = document.getElementById('product-fields');
+            const fieldHTML = `
+                <div class="dynamic-fields">
+                    <input type="text" name="product_id[]" placeholder="Product ID" required>
+                    <input type="number" name="quantity[]" placeholder="Quantity" required>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', fieldHTML);
+        }
+    </script>
+</head>
+<body>
+    <h1>Billing Page</h1>
+    <form method="POST" action="{% url 'generate_bill' %}" class="form-section">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Customer Email</label>
+            <input type="email" name="email" id="email" placeholder="Email ID" required>
+        </div>
+
+        <div id="product-fields">
+            <h3>Bill Section</h3>
+            <div class="dynamic-fields">
+                <input type="text" name="product_id[]" placeholder="Product ID" required>
+                <input type="number" name="quantity[]" placeholder="Quantity" required>
+            </div>
+        </div>
+        <div>
+            <button type="button" onclick="addProductField()">Add New</button>
+        </div>
+
+        <div class="form-group">
+            <h3>Denominations</h3>
+            <div class="denominations">
+                {% for denom in denominations %}
+                <div class="denomination">
+                    <label for="denom-{{ denom }}">{{ denom }}</label>
+                    <input 
+                        type="number"
+                        name="denominations[{{ denom }}]" 
+                        id="denom-{{ denom }}" 
+                        placeholder="Count" 
+                        min="0" 
+                        class="denomination-input"
+                    >
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+        <div class="form-group">
+            <label for="paid_amount">Cash Paid by Customer</label>
+            <input type="number" name="paid_amount" id="paid_amount" placeholder="Amount" required>
+        </div>
+
+        <div class="generate-button">
+            <button type="submit">Generate Bill</button>
+        </div>
+    </form>
+</body>
+</html>

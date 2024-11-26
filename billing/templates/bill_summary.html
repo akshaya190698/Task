@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Summary</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bill_summary.css' %}">
+</head>
+<body>
+    <h1>Bill Summary</h1>
+    <div class="bill-summary">
+        <p><strong>Customer Email:</strong> {{ bill.customer_email }}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Purchase Price</th>
+                    <th>Tax %</th>
+                    <th>Tax Amount</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in bill_items %}
+                <tr>
+                    <td>{{ item.product.product_id }}</td>
+                    <td>{{ item.product.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.purchase_price }}</td>
+                    <td>{{ item.product.tax_percentage }}</td>
+                    <td>{{ item.tax_amount }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="totals">
+            <p><strong>Total Price Without Tax:</strong> {{ bill.total_price_without_tax }}</p>
+            <p><strong>Total Tax Payable:</strong> {{ bill.total_tax }}</p>
+            <p><strong>Net Price:</strong> {{ bill.net_price }}</p>
+            <p><strong>Paid Amount:</strong> {{ bill.paid_amount }}</p>
+            <p><strong>Balance Payable:</strong> {{ bill.balance }}</p>
+        </div>
+
+        <div>
+            <h3>Balance Denomination:</h3>
+            <ul>
+                {% for denom, count in change_denominations.items %}
+                <li>{{ denom }}: {{ count }}</li><br>
+                <br>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
